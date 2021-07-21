@@ -1,0 +1,60 @@
+;TT Mokwena
+;2182501060
+;=================================================================
+;
+;  This program Flashes and LED by turning it ON and runnig a
+;  delay function and turning it OFF at a rate of 1 sec.
+;
+;=================================================================
+;Inputs & Outputs
+;Output: PortA 0
+;
+;=================================================================
+;Oscilator is 4Hz
+;=================================================================
+;
+;=================================================================
+;			Define Statements
+;=================================================================
+	XF EQU H'20'
+	YF EQU H'21'
+	AF EQU H'22'
+
+	GOTO Init
+;This program is a delay subroutine for 1 sec
+
+Wait_1_sec:
+	movlw 80
+	movwf XF
+
+loopX:
+	movlw 60
+	movwf YF
+loopY:
+	movlw 103
+	movwf AF
+loopA:
+	decfsz XF,1
+	GOTO loopA
+
+	decfsz YF,1
+	GOTO loopY
+
+	decfsz XF,1
+	GOTO loopX
+	return
+
+Init:
+	movlw .7
+	movwf h'1F'	;disable the comparator
+	bsf 3,5 	;goto bank 1
+	bcf 5,0		;make PortA.0 an output
+	bcf 3,5		;go back to bank 0
+	goto Main
+
+Main:	bsf 5,0		;Switch LED1 ON
+	call Wait_1_sec			;Call delay
+ 	bcf 5,0		;Switch LED1 OFF
+	call Wait_1_sec			;Call delay
+	goto Main
+	end
